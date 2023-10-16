@@ -1,6 +1,7 @@
 import prisma from "../../utils/prisma";
 import {CreateUserInput} from "./user.schema";
 import {hashPassword} from "../../utils/hash";
+// import tr from "@faker-js/faker/locales/tr";
 
 export async function createUser(input: CreateUserInput){
     const { password, ...rest} = input;
@@ -9,4 +10,20 @@ export async function createUser(input: CreateUserInput){
         data: { ...rest, salt, password: hash },
     });
     return user;
+}
+export async function findUserByEmail(email: string){
+    return prisma.user.findUnique({
+        where: {
+            email,
+        },
+    });
+}
+export async function findUsers(){
+    return prisma.user.findMany({
+        select: {
+            email: true,
+            name: true,
+            id: true,
+        },
+    });
 }
